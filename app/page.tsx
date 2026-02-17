@@ -1,17 +1,33 @@
 "use client";
 
+import axios from "axios";
 import React, { useState } from "react";
 
 export default function Home() {
   const [days, setDays] = useState(30);
   const [image, setImage] = useState<string | null>(null);
+  const [selectImage, setSelectedImage] = useState<File | null>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      setSelectedImage(e.target.files[0]);
       const url = URL.createObjectURL(e.target.files[0]);
       setImage(url);
     }
   };
+
+
+  async function handleSubmit() {
+    if (!selectImage) return;
+
+    const formData = new FormData();
+    formData.append("image", selectImage);
+    formData.append("days", days.toString());
+
+    const response = await axios.post("/api/generate", formData);
+    console.log("------>", response.data);
+
+  }
 
   return (
     <main className="min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white flex flex-col justify-center items-center p-6 relative overflow-hidden">
@@ -109,7 +125,7 @@ export default function Home() {
         {/* Action Button */}
         <div className="pt-2 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
           <button className="btn-generate group relative inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white transition-all duration-200 bg-black rounded-full hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 w-full md:w-auto min-w-[200px] shadow-xl shadow-black/10">
-            <span className="mr-2">Generate Transformation</span>
+            <span className="mr-2" onClick={handleSubmit}>Generate Transformation</span>
             <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
