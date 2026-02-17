@@ -18,14 +18,19 @@ export default function Home() {
 
 
   async function handleSubmit() {
+    console.log("got clicked");
+
     if (!selectImage) return;
 
     const formData = new FormData();
     formData.append("image", selectImage);
     formData.append("days", days.toString());
-
-    const response = await axios.post("/api/generate", formData);
-    console.log("------>", response.data);
+    try {
+      const response = await axios.post("/api/analyzeImage", formData);
+      console.log("------>", response.data);
+    } catch (error) {
+      console.log(error);
+    }
 
   }
 
@@ -124,8 +129,9 @@ export default function Home() {
 
         {/* Action Button */}
         <div className="pt-2 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-          <button className="btn-generate group relative inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white transition-all duration-200 bg-black rounded-full hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 w-full md:w-auto min-w-[200px] shadow-xl shadow-black/10">
-            <span className="mr-2" onClick={handleSubmit}>Generate Transformation</span>
+          <button className="btn-generate group relative inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white transition-all duration-200 bg-black rounded-full hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 w-full md:w-auto min-w-[200px] shadow-xl shadow-black/10"
+            onClick={handleSubmit}>
+            <span className="mr-2" >Generate Transformation</span>
             <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
