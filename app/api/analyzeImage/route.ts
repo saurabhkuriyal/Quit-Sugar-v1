@@ -21,7 +21,8 @@ export async function POST(req: Request) {
         if (!image) {
             return NextResponse.json({
                 error: "No image provided",
-                status: 400
+                status: 400,
+                message: "Failed"
             })
         }
 
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
         console.log("Cloudinary response ", uploadResponse);
 
 
-        return NextResponse.json({ success: true });
+        return NextResponse.json({ success: true, message: "Success" });
     } catch (error) {
         console.log(error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
