@@ -26,7 +26,11 @@ export default function Home() {
     formData.append("image", selectImage);
     formData.append("days", days.toString());
     try {
-      const response = await axios.post("/api/analyzeImage", formData);
+      const response = await axios.post("/api/analyzeImage", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log("------>", response.data);
     } catch (error) {
       console.log(error);
