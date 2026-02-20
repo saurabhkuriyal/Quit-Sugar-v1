@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import { NextResponse } from "next/server";
 
 cloudinary.config({
@@ -32,13 +32,14 @@ export async function POST(req: Request) {
 
         //Uploading to cloudinary
 
-        const uploadResponse = await new Promise((resolve, reject) => {
+        const uploadResponse = await new Promise<UploadApiResponse>((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream({
                 folder: "quit-sugar", //optional organization of images
             },
                 (error, result) => {
                     if (error) reject(error);
-                    else resolve(result)
+                    else if (!result) reject(new Error("No result from Cloudinary"));
+                    else resolve(result);
                 }
             );
             uploadStream.end(buffer)
