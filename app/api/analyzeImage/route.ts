@@ -44,7 +44,7 @@ export async function POST(req: Request) {
             uploadStream.end(buffer)
         })
 
-        console.log("Cloudinary response ", uploadResponse);
+        console.log("Cloudinary response ", uploadResponse.secure_url);
 
 
         return NextResponse.json({ success: true, message: "Success" });
