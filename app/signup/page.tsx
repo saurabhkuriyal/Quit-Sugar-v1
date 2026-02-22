@@ -67,20 +67,22 @@ export default function SignUpPage() {
                     </button>
 
                     {/* Continue with Email */}
-                    <button
-                        id="btn-continue-email"
-                        className="group w-full flex items-center gap-3 px-5 py-3.5 rounded-2xl border border-neutral-200 bg-white hover:bg-neutral-50 hover:border-neutral-300 hover:shadow-sm transition-all duration-200 text-sm font-medium text-neutral-700"
-                    >
-                        <span className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
-                            <svg className="w-5 h-5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    <Link href="/signupemail">
+                        <button
+                            id="btn-continue-email"
+                            className="group w-full flex items-center gap-3 px-5 py-3.5 rounded-2xl border border-neutral-200 bg-white hover:bg-neutral-50 hover:border-neutral-300 hover:shadow-sm transition-all duration-200 text-sm font-medium text-neutral-700"
+                        >
+                            <span className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+                                <svg className="w-5 h-5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </span>
+                            <span className="flex-1 text-left">Continue with Email</span>
+                            <svg className="w-4 h-4 text-neutral-300 group-hover:text-neutral-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                             </svg>
-                        </span>
-                        <span className="flex-1 text-left">Continue with Email</span>
-                        <svg className="w-4 h-4 text-neutral-300 group-hover:text-neutral-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
+                        </button>
+                    </Link>
                 </div>
 
                 {/* Divider */}
