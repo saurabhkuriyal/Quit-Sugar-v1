@@ -1,3 +1,4 @@
+import dbConnect from "@/utils/db";
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import { NextResponse } from "next/server";
 
@@ -9,6 +10,7 @@ cloudinary.config({
 
 export async function POST(req: Request) {
     try {
+        await dbConnect();
         const formData = await req.formData()
 
 
