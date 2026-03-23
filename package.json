@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.33",
     "axios": "^1.13.5",
     "cloudinary": "^2.9.0",
     "dotenv": "^17.3.1",

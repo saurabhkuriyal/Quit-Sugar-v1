@@ -1,12 +1,37 @@
 "use client";
 
+import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Home() {
+  const [landmarker, setLandmarker] = useState<FaceLandmarker | null>(null);
   const [days, setDays] = useState(30);
   const [image, setImage] = useState<string | null>(null);
   const [selectImage, setSelectedImage] = useState<File | null>(null);
+
+  // 1. Initialize MediaPipe Face Landmarker for IMAGES
+  useEffect(() => {
+    const initializeMediaPipe = async () => {
+      const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+      );
+
+      const faceLandmarker = await FaceLandmarker.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`,
+          delegate: "GPU"
+        },
+        outputFaceBlendshapes: true,
+        runningMode: "IMAGE", // Changed from VIDEO to IMAGE
+        numFaces: 1
+      });
+
+      setLandmarker(faceLandmarker);
+    };
+
+    initializeMediaPipe();
+  }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -66,7 +91,10 @@ export default function Home() {
             {/* Image Drop Zone */}
             <div className="relative aspect-[4/3] w-full flex flex-col items-center justify-center bg-neutral-50/50 hover:bg-neutral-50 transition-colors cursor-pointer group-hover:border-neutral-200 border-b border-transparent">
               {image ? (
-                <img src={image} alt="Preview" className="w-full h-full object-cover" />
+                <img
+                  src={image}
+                  alt="Preview"
+                  className="w-full h-full object-cover" />
               ) : (
                 <div className="text-center p-12 transition-transform group-hover:scale-105 duration-300">
                   <div className="w-16 h-16 bg-white rounded-2xl shadow-sm border border-neutral-100 flex items-center justify-center mx-auto mb-6">
