@@ -7,7 +7,7 @@ export const metadata = {
 
 const LAST_UPDATED = "February 22, 2026";
 const APP_NAME = "QuitSugar";
-const CONTACT_EMAIL = "support@quitsugar.app";
+const CONTACT_EMAIL = "[EMAIL_ADDRESS]";
 
 const sections = [
     {
