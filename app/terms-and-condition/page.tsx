@@ -41,6 +41,10 @@ const sections = [
                 title: "3.4 Individual Results Vary",
                 body: `Physical results from lifestyle changes, including reducing or eliminating sugar consumption, vary greatly between individuals based on genetics, overall diet, medical conditions, and many other factors. No AI-generated image can predict your personal outcome.`,
             },
+            {
+                title: "3.5 Individual Results Vary",
+                body: `Physical results from lifestyle changes, including reducing or eliminating sugar consumption, vary greatly between individuals based on genetics, overall diet, medical conditions, and many other factors. No AI-generated image can predict your personal outcome.`,
+            },
         ],
     },
     {
