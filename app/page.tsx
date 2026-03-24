@@ -1,10 +1,11 @@
 "use client";
 
-import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
+import type { FaceLandmarker } from "@mediapipe/tasks-vision";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function Home() {
+  const imageRef = useRef(null);
   const [landmarker, setLandmarker] = useState<FaceLandmarker | null>(null);
   const [days, setDays] = useState(30);
   const [image, setImage] = useState<string | null>(null);
@@ -13,6 +14,11 @@ export default function Home() {
   // 1. Initialize MediaPipe Face Landmarker for IMAGES
   useEffect(() => {
     const initializeMediaPipe = async () => {
+      // Bypass Next.js/Turbopack completely by natively importing the pure JS module straight from the CDN!
+      // @ts-ignore - Webpack will ignore this, but TypeScript might complain about absolute URLs.
+      const visionTasks = await import(/* webpackIgnore: true */ "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.mjs");
+      const { FilesetResolver, FaceLandmarker } = visionTasks;
+
       const vision = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
       );
@@ -41,6 +47,46 @@ export default function Home() {
     }
   };
 
+  const analyzeImage = async () => {
+    if (!landmarker || !imageRef.current) return;
+
+    // setIsProcessing(true);
+
+    try {
+      // Run detection on the static image element
+      const results = landmarker.detect(imageRef.current);
+
+      console.log("results", results);
+
+
+      if (results.faceLandmarks.length > 0) {
+        const landmarks = results.faceLandmarks[0];
+
+        // Calculate puffiness (Face Width to Height Ratio)
+        // const faceWidth = calculateDistance(landmarks[234], landmarks[454]);
+        // const faceHeight = calculateDistance(landmarks[10], landmarks[152]);
+        // const puffinessRatio = faceWidth / faceHeight;
+
+        // setMetrics({
+        //   puffinessRatio: puffinessRatio.toFixed(4),
+        //   faceWidth: faceWidth.toFixed(4),
+        //   faceHeight: faceHeight.toFixed(4)
+        // });
+
+        // At this point, you can send 'metrics' to your Next.js API route to save it!
+        // await fetch('/api/save-metrics', { method: 'POST', body: JSON.stringify(metrics) });
+
+      } else {
+        alert("No face detected in this image. Please try another one.");
+      }
+    } catch (error) {
+      console.error("Error analyzing face:", error);
+    } finally {
+      // setIsProcessing(false);
+      console.log('DONE');
+
+    }
+  };
 
   async function handleSubmit() {
     console.log("got clicked");
@@ -93,6 +139,8 @@ export default function Home() {
               {image ? (
                 <img
                   src={image}
+                  ref={imageRef}
+                  onLoad={analyzeImage}
                   alt="Preview"
                   className="w-full h-full object-cover" />
               ) : (
