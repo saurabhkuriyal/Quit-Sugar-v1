@@ -10,6 +10,11 @@ export default function Home() {
   const [days, setDays] = useState(30);
   const [image, setImage] = useState<string | null>(null);
   const [selectImage, setSelectedImage] = useState<File | null>(null);
+  let [metrics, setMetrics] = useState({
+    puffinessRatio: "",
+    faceWidth: "",
+    faceHeight: ""
+  });
 
   // 1. Initialize MediaPipe Face Landmarker for IMAGES
   useEffect(() => {
@@ -62,19 +67,21 @@ export default function Home() {
       if (results.faceLandmarks.length > 0) {
         const landmarks = results.faceLandmarks[0];
 
-        // Calculate puffiness (Face Width to Height Ratio)
-        // const faceWidth = calculateDistance(landmarks[234], landmarks[454]);
-        // const faceHeight = calculateDistance(landmarks[10], landmarks[152]);
-        // const puffinessRatio = faceWidth / faceHeight;
+        //Calculate puffiness (Face Width to Height Ratio)
+        const faceWidth = calculateDistance(landmarks[234], landmarks[454]);
+        const faceHeight = calculateDistance(landmarks[10], landmarks[152]);
+        const puffinessRatio = faceWidth / faceHeight;
 
-        // setMetrics({
-        //   puffinessRatio: puffinessRatio.toFixed(4),
-        //   faceWidth: faceWidth.toFixed(4),
-        //   faceHeight: faceHeight.toFixed(4)
-        // });
+        setMetrics({
+          puffinessRatio: puffinessRatio.toFixed(4),
+          faceWidth: faceWidth.toFixed(4),
+          faceHeight: faceHeight.toFixed(4)
+        });
 
-        // At this point, you can send 'metrics' to your Next.js API route to save it!
-        // await fetch('/api/save-metrics', { method: 'POST', body: JSON.stringify(metrics) });
+
+
+        //At this point, you can send 'metrics' to your Next.js API route to save it!
+        //await fetch('/api/save-metrics', { method: 'POST', body: JSON.stringify(metrics) });
 
       } else {
         alert("No face detected in this image. Please try another one.");
@@ -86,6 +93,16 @@ export default function Home() {
       console.log('DONE');
 
     }
+  };
+
+
+  // Helper for 3D distance
+  const calculateDistance = (point1: any, point2: any) => {
+    return Math.sqrt(
+      Math.pow(point2.x - point1.x, 2) +
+      Math.pow(point2.y - point1.y, 2) +
+      Math.pow(point2.z - point1.z, 2)
+    );
   };
 
   async function handleSubmit() {
