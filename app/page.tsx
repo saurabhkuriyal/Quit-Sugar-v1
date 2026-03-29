@@ -132,7 +132,7 @@ export default function Home() {
       {/* Background Gradients (Subtle) */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-gradient-to-r from-blue-50 to-purple-50 rounded-full blur-[120px] opacity-60 pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-gradient-to-l from-emerald-50 to-teal-50 rounded-full blur-[100px] opacity-50 pointer-events-none" />
-
+      <h1> Here is that {metrics.puffinessRatio}</h1>
       {/* Main Content Container */}
       <div className="relative z-10 w-full max-w-2xl text-center space-y-12">
 
