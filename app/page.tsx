@@ -10,6 +10,7 @@ export default function Home() {
   const [days, setDays] = useState(30);
   const [image, setImage] = useState<string | null>(null);
   const [selectImage, setSelectedImage] = useState<File | null>(null);
+  const [faceResults, setFaceResults] = useState({});
   let [metrics, setMetrics] = useState({
     puffinessRatio: "",
     faceWidth: "",
@@ -63,6 +64,7 @@ export default function Home() {
 
       console.log("results", results);
 
+      setFaceResults(results); // Save it for later!
 
       if (results.faceLandmarks.length > 0) {
         const landmarks = results.faceLandmarks[0];
@@ -110,9 +112,13 @@ export default function Home() {
 
     if (!selectImage) return;
 
+    console.log("faceResults", faceResults);
+
+
     const formData = new FormData();
     formData.append("image", selectImage);
     formData.append("days", days.toString());
+    formData.append("results", JSON.stringify(faceResults));
     try {
       const response = await axios.post("/api/analyzeImage", formData, {
         headers: {
@@ -132,7 +138,7 @@ export default function Home() {
       {/* Background Gradients (Subtle) */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-gradient-to-r from-blue-50 to-purple-50 rounded-full blur-[120px] opacity-60 pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-gradient-to-l from-emerald-50 to-teal-50 rounded-full blur-[100px] opacity-50 pointer-events-none" />
-      <h1> Here is that {metrics.puffinessRatio}</h1>
+      <h1> Here is that {metrics.faceHeight}</h1>
       {/* Main Content Container */}
       <div className="relative z-10 w-full max-w-2xl text-center space-y-12">
 

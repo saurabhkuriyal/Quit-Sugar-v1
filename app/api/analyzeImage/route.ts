@@ -18,8 +18,9 @@ export async function POST(req: Request) {
 
         const image = formData.get("image") as File;
         const days = formData.get("days");
+        const results = formData.get("results");
 
-        console.log("------>", image, days);
+        console.log("------>", image, days, results);
         if (!image) {
             return NextResponse.json({
                 error: "No image provided",
