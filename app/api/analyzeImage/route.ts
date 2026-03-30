@@ -20,7 +20,7 @@ export async function POST(req: Request) {
         const days = formData.get("days");
         const results = formData.get("results");
 
-        console.log("------>", image, days, results);
+        //console.log("------>", image, days, results);
         if (!image) {
             return NextResponse.json({
                 error: "No image provided",
@@ -28,6 +28,9 @@ export async function POST(req: Request) {
                 message: "Failed"
             })
         }
+
+        NextResponse.json({ success: true, message: "Success with butter" });
+
 
         //Converting file into buffer
         const arrayBuffer = await image.arrayBuffer();
