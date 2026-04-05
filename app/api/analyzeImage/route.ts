@@ -14,11 +14,11 @@ export async function POST(req: Request) {
         const formData = await req.formData()
 
 
-        console.log("------>", formData);
+        //console.log("------>", formData);
 
         const image = formData.get("image") as File;
         const days = formData.get("days");
-        const results = formData.get("results");
+        const results = formData.get("results") as string;
 
         //console.log("------>", image, days, results);
         if (!image) {
@@ -29,8 +29,28 @@ export async function POST(req: Request) {
             })
         }
 
-        NextResponse.json({ success: true, message: "Success with butter" });
+        ////////// FACIAL LOGIC WILL BE HERE //////////
 
+        const newResult = JSON.parse(results);
+        console.log("landmarks", newResult.faceLandmarks[0]);
+
+        const calculateDistance = (point1: any, point2: any) => {
+            return Math.sqrt(
+                Math.pow(point2.x - point1.x, 2) +
+                Math.pow(point2.y - point1.y, 2) +
+                Math.pow(point2.z - point1.z, 2)
+            );
+        };
+
+        const faceWidth = calculateDistance(newResult.faceLandmarks[0][234], newResult.faceLandmarks[0][454]);
+        const faceHeight = calculateDistance(newResult.faceLandmarks[0][10], newResult.faceLandmarks[0][152]);
+        const puffinessRatio = faceWidth / faceHeight;
+
+        console.log("puffinessRatio", puffinessRatio);
+
+
+
+        ////////CLOUDINARY UPLOAD /////////
 
         //Converting file into buffer
         const arrayBuffer = await image.arrayBuffer();
