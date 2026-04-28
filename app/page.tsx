@@ -4,6 +4,12 @@ import type { FaceLandmarker } from "@mediapipe/tasks-vision";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 
+interface Landmark {
+  x: number;
+  y: number;
+  z: number;
+}
+
 export default function Home() {
   const imageRef = useRef(null);
   const [landmarker, setLandmarker] = useState<FaceLandmarker | null>(null);
@@ -69,6 +75,9 @@ export default function Home() {
       if (results.faceLandmarks.length > 0) {
         const landmarks = results.faceLandmarks[0];
 
+        console.log("--->", await validateHeadPose(landmarks));
+
+
         //Calculate puffiness (Face Width to Height Ratio)
         const faceWidth = calculateDistance(landmarks[234], landmarks[454]);
         const faceHeight = calculateDistance(landmarks[10], landmarks[152]);
@@ -97,6 +106,59 @@ export default function Home() {
     }
   };
 
+  //function for validating pose
+  const validateHeadPose = (landmarks: Landmark[]) => {
+    const nose = landmarks[1];
+    const leftEdge = landmarks[234];
+    const rightEdge = landmarks[454];
+    const top = landmarks[10];
+    const bottom = landmarks[152];
+    const leftEye = landmarks[33];
+    const rightEye = landmarks[263];
+
+    // 1. Calculate YAW (Turning Left/Right)
+    // We see where the nose is relative to the total width of the face.
+    const faceWidth = rightEdge.x - leftEdge.x;
+    const noseRatioX = (nose.x - leftEdge.x) / faceWidth;
+    // Ideal: 0.5 (Nose is exactly in the middle)
+
+    // 2. Calculate PITCH (Looking Up/Down)
+    // We see where the nose is relative to the total height of the face.
+    const faceHeight = bottom.y - top.y;
+    const noseRatioY = (nose.y - top.y) / faceHeight;
+    // Ideal: ~0.5 (varies slightly by face length, usually between 0.45 and 0.55)
+
+    // 3. Calculate ROLL (Head Tilt Ear-to-Shoulder)
+    // The Y-coordinates of both eyes should be almost identical.
+    const eyeTilt = rightEye.y - leftEye.y;
+    // Ideal: 0.0 (Eyes are perfectly level)
+
+    // --- Define the Validation Thresholds ---
+    // You can tighten or loosen these numbers based on how strict you want to be
+    const isYawCentered = noseRatioX > 0.45 && noseRatioX < 0.55;
+    const isPitchCentered = noseRatioY > 0.45 && noseRatioY < 0.55;
+    const isRollCentered = Math.abs(eyeTilt) < 0.02;
+
+    const isLookingStraight = isYawCentered && isPitchCentered && isRollCentered;
+
+    // Generate a helpful UI message
+    let message = "Perfect! Hold still.";
+    if (!isLookingStraight) {
+      if (!isYawCentered) {
+        message = noseRatioX < 0.45 ? "Turn your head slightly to the right." : "Turn your head slightly to the left.";
+      } else if (!isPitchCentered) {
+        message = noseRatioY < 0.45 ? "Tilt your chin down a bit." : "Lift your chin up a bit.";
+      } else if (!isRollCentered) {
+        message = eyeTilt > 0 ? "Tilt your head to the left to level your eyes." : "Tilt your head to the right to level your eyes.";
+      }
+    }
+
+    return {
+      isValid: isLookingStraight,
+      feedbackMessage: message,
+      metrics: { noseRatioX, noseRatioY, eyeTilt }
+    };
+  };
 
   // Helper for 3D distance
   const calculateDistance = (point1: any, point2: any) => {
