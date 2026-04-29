@@ -75,8 +75,9 @@ export default function Home() {
       if (results.faceLandmarks.length > 0) {
         const landmarks = results.faceLandmarks[0];
 
-        console.log("For Head pose--->", await validateHeadPose(landmarks));
+        const position = await validateHeadPose(landmarks)
 
+        console.log("-------->", position);
 
         //Calculate puffiness (Face Width to Height Ratio)
         const faceWidth = calculateDistance(landmarks[234], landmarks[454]);
