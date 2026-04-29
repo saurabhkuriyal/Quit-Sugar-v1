@@ -79,6 +79,9 @@ export default function Home() {
 
         console.log("-------->", position);
 
+        //On the basis of position we should also show percentage
+
+
         //Calculate puffiness (Face Width to Height Ratio)
         const faceWidth = calculateDistance(landmarks[234], landmarks[454]);
         const faceHeight = calculateDistance(landmarks[10], landmarks[152]);
