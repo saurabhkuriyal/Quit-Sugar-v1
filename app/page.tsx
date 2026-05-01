@@ -83,6 +83,8 @@ export default function Home() {
 
         //for valid pose pass the processig
         if (position.status) {
+          console.log("result saved");
+
           setFaceResults(results); // Save it for later!
         }
 
@@ -144,8 +146,8 @@ export default function Home() {
 
     // --- Define the Validation Thresholds ---
     // You can tighten or loosen these numbers based on how strict you want to be
-    const isYawCentered = noseRatioX > 0.45 && noseRatioX < 0.55;
-    const isPitchCentered = noseRatioY > 0.45 && noseRatioY < 0.55;
+    const isYawCentered = noseRatioX > 0.40 && noseRatioX < 0.55;
+    const isPitchCentered = noseRatioY > 0.40 && noseRatioY < 0.60;
     const isRollCentered = Math.abs(eyeTilt) < 0.02;
 
     const isLookingStraight = isYawCentered && isPitchCentered && isRollCentered;
@@ -155,10 +157,10 @@ export default function Home() {
     let status = true;
     if (!isLookingStraight) {
       if (!isYawCentered) {
-        message = noseRatioX < 0.45 ? "Turn your head slightly to the right." : "Turn your head slightly to the left.";
+        message = noseRatioX < 0.40 ? "Turn your head slightly to the right." : "Turn your head slightly to the left.";
         status = false;
       } else if (!isPitchCentered) {
-        message = noseRatioY < 0.45 ? "Tilt your chin down a bit." : "Lift your chin up a bit.";
+        message = noseRatioY < 0.40 ? "Tilt your chin down a bit." : "Lift your chin up a bit.";
         status = false;
       } else if (!isRollCentered) {
         message = eyeTilt > 0 ? "Tilt your head to the left to level your eyes." : "Tilt your head to the right to level your eyes.";
