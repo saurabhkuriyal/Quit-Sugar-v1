@@ -70,7 +70,7 @@ export default function Home() {
 
       console.log("results", results);
 
-      setFaceResults(results); // Save it for later!
+
 
       if (results.faceLandmarks.length > 0) {
         const landmarks = results.faceLandmarks[0];
@@ -80,6 +80,11 @@ export default function Home() {
         console.log("-------->", position);
 
         //On the basis of position we should also show percentage
+
+        //for valid pose pass the processig
+        if (position.status) {
+          setFaceResults(results); // Save it for later!
+        }
 
 
         //Calculate puffiness (Face Width to Height Ratio)
@@ -147,20 +152,25 @@ export default function Home() {
 
     // Generate a helpful UI message
     let message = "Perfect! Hold still.";
+    let status = true;
     if (!isLookingStraight) {
       if (!isYawCentered) {
         message = noseRatioX < 0.45 ? "Turn your head slightly to the right." : "Turn your head slightly to the left.";
+        status = false;
       } else if (!isPitchCentered) {
         message = noseRatioY < 0.45 ? "Tilt your chin down a bit." : "Lift your chin up a bit.";
+        status = false;
       } else if (!isRollCentered) {
         message = eyeTilt > 0 ? "Tilt your head to the left to level your eyes." : "Tilt your head to the right to level your eyes.";
+        status = false;
       }
     }
 
     return {
       isValid: isLookingStraight,
       feedbackMessage: message,
-      metrics: { noseRatioX, noseRatioY, eyeTilt }
+      metrics: { noseRatioX, noseRatioY, eyeTilt },
+      status: status
     };
   };
 
@@ -176,9 +186,10 @@ export default function Home() {
   async function handleSubmit() {
     console.log("got clicked");
 
-    if (!selectImage) return;
+    if (!selectImage || faceResults == null) return;
 
     console.log("faceResults", faceResults);
+
 
 
     const formData = new FormData();
