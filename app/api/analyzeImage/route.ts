@@ -218,7 +218,7 @@ function angle(a: Landmark, b: Landmark, c: Landmark): number {
 
     return Math.acos(dot / (magA * magB)) * (180 / Math.PI);
 }
-//    //first for puffinessc
+//    //first for puffiness mediapipe coordinate
 //     const newResult = JSON.parse(results);
 //     // console.log("landmarks", newResult.faceLandmarks[0]);
 
